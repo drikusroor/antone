@@ -555,7 +555,19 @@
         <button class="tab-btn" data-tab="envelope">Envelope</button>
         <button class="tab-btn" data-tab="keyboard">Keyboard</button>
       </div>
-      <div class="tab-content" id="tab-presets"></div>
+      <div class="tab-content" id="tab-presets">
+        <div class="tab-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <button class="preset-btn" data-freq="440">440 Hz<span class="preset-label">A4</span></button>
+          <button class="preset-btn" data-freq="262">262 Hz<span class="preset-label">Middle C</span></button>
+          <button class="preset-btn" data-freq="432">432 Hz<span class="preset-label">A432</span></button>
+          <button class="preset-btn" data-freq="1000">1 kHz<span class="preset-label">Test tone</span></button>
+          <button class="preset-btn" data-freq="100">100 Hz<span class="preset-label">Bass</span></button>
+          <button class="preset-btn" data-freq="60">60 Hz<span class="preset-label">Mains hum</span></button>
+          <button class="preset-btn" data-freq="20">20 Hz<span class="preset-label">Sub-bass</span></button>
+          <button class="preset-btn" data-freq="10000">10 kHz<span class="preset-label">High</span></button>
+          <button class="preset-btn" data-freq="15000">15 kHz<span class="preset-label">Hearing test</span></button>
+        </div>
+      </div>
       <div class="tab-content" id="tab-layers"></div>
       <div class="tab-content" id="tab-binaural"></div>
       <div class="tab-content" id="tab-sweep"></div>
