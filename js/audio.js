@@ -164,7 +164,7 @@ export function setVolume(v) {
 
 export function setBinauralOffset(hz) {
   binauralOffset = hz;
-  if (oscR) oscR.frequency.setTargetAtTime(currentFreq + hz, audioCtx.currentTime, 0.01);
+  if (oscR) oscR.frequency.value = currentFreq + hz;
 }
 
 export function setEnvelope(params) {
@@ -260,8 +260,100 @@ export function getLayers() {
   return layers.map(l => ({ freq: l.freq, waveform: l.waveform, volume: l.volume, interval: l.interval, enabled: l.enabled }));
 }
 
+// --- Polyphonic voice management (for keyboard) ---
+// Each voice is independent: own oscillator + gain, routed through masterGain.
+const activeVoices = new Map(); // noteId -> { osc, gain, releaseTimeout }
+
+function ensurePolyGraph() {
+  // Ensure audioCtx, masterGain, analyser exist even if main oscillator isn't playing
+  const ctx = ensureContext();
+  if (!masterGain) {
+    masterGain = ctx.createGain();
+    masterGain.gain.value = currentVolume;
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 2048;
+    masterGain.connect(analyser);
+    analyser.connect(ctx.destination);
+  }
+  return ctx;
+}
+
+export function startVoice(noteId, freq) {
+  // If voice already active for this note, ignore
+  if (activeVoices.has(noteId)) return;
+
+  const ctx = ensurePolyGraph();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = currentWave;
+  osc.frequency.value = freq;
+  gain.gain.value = 0;
+
+  osc.connect(gain);
+  gain.connect(masterGain);
+  osc.start();
+
+  // Apply attack
+  const now = ctx.currentTime;
+  if (envelope.a > 0) {
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(1, now + envelope.a / 1000);
+  } else {
+    gain.gain.setValueAtTime(1, now);
+  }
+  // Apply decay to sustain
+  if (envelope.d > 0) {
+    const attackEnd = now + envelope.a / 1000;
+    gain.gain.linearRampToValueAtTime(envelope.s / 100, attackEnd + envelope.d / 1000);
+  }
+
+  activeVoices.set(noteId, { osc, gain, releaseTimeout: null });
+}
+
+export function stopVoice(noteId) {
+  const voice = activeVoices.get(noteId);
+  if (!voice) return;
+
+  const ctx = audioCtx;
+  const now = ctx.currentTime;
+  const currentGainVal = voice.gain.gain.value;
+
+  voice.gain.gain.cancelScheduledValues(now);
+  voice.gain.gain.setValueAtTime(currentGainVal, now);
+
+  if (envelope.r > 0) {
+    voice.gain.gain.linearRampToValueAtTime(0, now + envelope.r / 1000);
+    voice.releaseTimeout = setTimeout(() => {
+      voice.osc.stop();
+      voice.osc.disconnect();
+      voice.gain.disconnect();
+      activeVoices.delete(noteId);
+    }, envelope.r);
+  } else {
+    voice.osc.stop();
+    voice.osc.disconnect();
+    voice.gain.disconnect();
+    activeVoices.delete(noteId);
+  }
+}
+
+export function stopAllVoices() {
+  for (const [noteId, voice] of activeVoices) {
+    if (voice.releaseTimeout) clearTimeout(voice.releaseTimeout);
+    voice.osc.stop();
+    voice.osc.disconnect();
+    voice.gain.disconnect();
+  }
+  activeVoices.clear();
+}
+
+export function hasActiveVoices() {
+  return activeVoices.size > 0;
+}
+
 export function getAnalyser() { return analyser; }
-export function getIsPlaying() { return isPlaying; }
+export function getIsPlaying() { return isPlaying || activeVoices.size > 0; }
 export function getIsReleasing() { return isReleasing; }
 export function getCurrentFreq() { return currentFreq; }
 export function getCurrentWave() { return currentWave; }

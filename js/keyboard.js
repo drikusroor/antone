@@ -4,7 +4,7 @@ import { updateFreqUI } from './ui.js';
 import { startDrawing } from './visualizer.js';
 
 let octave = 4;
-let activeKey = null;
+const activeKeys = new Set();
 let isActive = false;
 
 const KEY_MAP = {
@@ -26,27 +26,31 @@ function highlightKey(noteOffset, on) {
   });
 }
 
+function noteIdFor(noteOffset) {
+  const noteInOctave = noteOffset % 12;
+  const noteOctave = octave + Math.floor(noteOffset / 12);
+  return `${noteInOctave}-${noteOctave}`;
+}
+
 function playNote(noteOffset) {
-  if (activeKey === noteOffset) return;
-  if (activeKey !== null) highlightKey(activeKey, false);
-  activeKey = noteOffset;
+  if (activeKeys.has(noteOffset)) return;
+  activeKeys.add(noteOffset);
   highlightKey(noteOffset, true);
+
   const noteInOctave = noteOffset % 12;
   const noteOctave = octave + Math.floor(noteOffset / 12);
   const freq = Math.round(noteToFreq(noteInOctave, noteOctave));
-  audio.setFrequency(freq);
+
+  audio.startVoice(noteIdFor(noteOffset), freq);
   updateFreqUI(freq);
-  if (!audio.getIsPlaying()) {
-    audio.startAudio();
-    startDrawing();
-  }
+  startDrawing();
 }
 
 function releaseNote(noteOffset) {
-  if (activeKey !== noteOffset) return;
+  if (!activeKeys.has(noteOffset)) return;
+  activeKeys.delete(noteOffset);
   highlightKey(noteOffset, false);
-  activeKey = null;
-  audio.stopAudio();
+  audio.stopVoice(noteIdFor(noteOffset));
 }
 
 function onKeyDown(e) {
@@ -72,7 +76,7 @@ export function initKeyboard() {
     const note = parseInt(key.dataset.note, 10);
     key.addEventListener('mousedown', (e) => { e.preventDefault(); if (isActive) playNote(note); });
     key.addEventListener('mouseup', () => { if (isActive) releaseNote(note); });
-    key.addEventListener('mouseleave', () => { if (isActive && activeKey === note) releaseNote(note); });
+    key.addEventListener('mouseleave', () => { if (isActive && activeKeys.has(note)) releaseNote(note); });
     key.addEventListener('touchstart', (e) => { e.preventDefault(); if (isActive) playNote(note); });
     key.addEventListener('touchend', () => { if (isActive) releaseNote(note); });
   });
@@ -81,10 +85,12 @@ export function initKeyboard() {
 
 export function setKeyboardTabActive(active) {
   isActive = active;
-  if (!active && activeKey !== null) {
-    highlightKey(activeKey, false);
-    activeKey = null;
-    audio.stopAudio();
+  if (!active) {
+    for (const noteOffset of activeKeys) {
+      highlightKey(noteOffset, false);
+    }
+    activeKeys.clear();
+    audio.stopAllVoices();
   }
 }
 
