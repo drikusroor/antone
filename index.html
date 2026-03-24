@@ -375,7 +375,7 @@
         <span class="unit">Hz</span>
         <span class="note-name" id="noteName">A4</span>
       </div>
-      <input type="range" id="freqSlider" min="20" max="20000" value="440" step="1">
+      <input type="range" id="freqSlider" min="0" max="1" value="0.4394" step="0.0001">
       <div class="range-labels"><span>20 Hz</span><span>20 kHz</span></div>
     </div>
 
@@ -446,24 +446,38 @@ const waveBtns = document.querySelectorAll('.wave-btn');
 
 let currentWave = 'sine';
 
-function updateNote() {
-  const f = parseFloat(freqNum.value) || 440;
+const MIN_FREQ = 20;
+const MAX_FREQ = 20000;
+const LOG_MIN = Math.log(MIN_FREQ);
+const LOG_MAX = Math.log(MAX_FREQ);
+
+// Convert normalized slider position (0–1) to frequency (log scale)
+function sliderToFreq(t) {
+  return Math.round(Math.exp(LOG_MIN + t * (LOG_MAX - LOG_MIN)));
+}
+
+// Convert frequency to normalized slider position (0–1)
+function freqToSlider(f) {
+  return (Math.log(f) - LOG_MIN) / (LOG_MAX - LOG_MIN);
+}
+
+function setFreq(f) {
+  f = Math.max(MIN_FREQ, Math.min(MAX_FREQ, f));
+  freqNum.value = f;
   noteName.textContent = freqToNote(f);
+  if (oscillator) oscillator.frequency.setTargetAtTime(f, audioCtx.currentTime, 0.01);
 }
 
 freqSlider.addEventListener('input', () => {
-  freqNum.value = freqSlider.value;
-  if (oscillator) oscillator.frequency.setTargetAtTime(parseFloat(freqSlider.value), audioCtx.currentTime, 0.01);
-  updateNote();
+  setFreq(sliderToFreq(parseFloat(freqSlider.value)));
 });
 
 freqNum.addEventListener('input', () => {
   let v = parseFloat(freqNum.value);
-  if (v < 20) v = 20;
-  if (v > 20000) v = 20000;
-  freqSlider.value = v;
-  if (oscillator) oscillator.frequency.setTargetAtTime(v, audioCtx.currentTime, 0.01);
-  updateNote();
+  if (!v || v < MIN_FREQ) v = MIN_FREQ;
+  if (v > MAX_FREQ) v = MAX_FREQ;
+  freqSlider.value = freqToSlider(v);
+  setFreq(v);
 });
 
 volumeSlider.addEventListener('input', () => {
