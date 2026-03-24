@@ -69,9 +69,9 @@ All settings are shareable via URL params, extending the existing scheme. Short 
 | `f` | Frequency (Hz) | `f=261` |
 | `w` | Waveform | `w=sawtooth` |
 | `v` | Volume (0-100) | `v=75` |
-| `l1` | Layer 1: freq,waveform,volume | `l1=880,sine,50` |
-| `l2` | Layer 2 | `l2=660,square,30` |
-| `l3` | Layer 3 | `l3=1320,triangle,40` |
+| `l1` | Layer 1: freq,waveform,volume,interval | `l1=880,sine,50,octave-up` |
+| `l2` | Layer 2 | `l2=660,square,30,fifth` |
+| `l3` | Layer 3 | `l3=1320,triangle,40,custom` |
 | `b` | Binaural offset (Hz) | `b=5` |
 | `sf` | Sweep start freq | `sf=100` |
 | `se` | Sweep end freq | `se=2000` |
