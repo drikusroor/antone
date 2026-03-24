@@ -589,6 +589,215 @@
     padding: 12px;
   }
 
+  /* Sweep */
+  .sweep-freq-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .sweep-freq-row input[type="number"] {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    width: 7ch;
+    padding: 6px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--amber);
+    -moz-appearance: textfield;
+  }
+
+  .sweep-freq-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .sweep-freq-row span {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+  }
+
+  .sweep-mode-btns { display: flex; gap: 6px; }
+
+  .sweep-mode-btn {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 14px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    flex: 1;
+    text-align: center;
+  }
+
+  .sweep-mode-btn.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .sweep-play-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--amber-dim);
+    border-radius: 8px;
+    color: var(--amber);
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+  }
+
+  .sweep-play-btn.sweeping {
+    background: var(--amber);
+    color: var(--bg);
+  }
+
+  /* Envelope */
+  .adsr-viz {
+    width: 100%;
+    height: 80px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .adsr-sliders {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .adsr-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .adsr-slider input[type="range"] { width: 100%; }
+
+  .adsr-slider .adsr-val {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+  }
+
+  /* Keyboard */
+  .keyboard-octave {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .keyboard-octave span { color: var(--amber-dim); font-weight: 600; }
+
+  .piano {
+    position: relative;
+    height: 120px;
+    display: flex;
+    width: 100%;
+  }
+
+  .piano-white {
+    flex: 1;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 0 0 6px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.1s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .piano-white + .piano-white { margin-left: 2px; }
+
+  .piano-white .key-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .piano-white .note-label {
+    font-family: var(--font-mono);
+    font-size: 0.45rem;
+    color: var(--text-dim);
+    opacity: 0.5;
+    margin-top: 2px;
+  }
+
+  .piano-white.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+  }
+
+  .piano-white.active .key-label { color: var(--amber); }
+
+  .piano-black-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 65%;
+    display: flex;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .piano-black-spacer { flex: 1; }
+
+  .piano-black {
+    width: 10%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 6px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.1s;
+    margin: 0 -1%;
+    position: relative;
+  }
+
+  .piano-black .key-label {
+    font-family: var(--font-mono);
+    font-size: 0.45rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .piano-black.active {
+    background: var(--amber-dim);
+    border-color: var(--amber);
+  }
+
+  .piano-black.active .key-label { color: var(--amber-bright); }
+
+  .keyboard-hint {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 8px;
+    opacity: 0.6;
+  }
+
   /* Footer */
   footer {
     text-align: center;
@@ -714,9 +923,86 @@
         </div>
         <div id="binauralBeatLabel" class="tab-info" style="text-align:center; color:var(--amber-dim);"></div>
       </div>
-      <div class="tab-content" id="tab-sweep"></div>
-      <div class="tab-content" id="tab-envelope"></div>
-      <div class="tab-content" id="tab-keyboard"></div>
+      <div class="tab-content" id="tab-sweep">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="sweep-freq-row">
+            <span>From</span>
+            <input type="number" id="sweepStart" value="440" min="20" max="20000">
+            <span>Hz &rarr;</span>
+            <input type="number" id="sweepEnd" value="880" min="20" max="20000">
+            <span>Hz</span>
+          </div>
+          <div class="control-group">
+            <label>Duration</label>
+            <div class="volume-row">
+              <input type="range" id="sweepDuration" min="1" max="30" value="5" step="0.5" style="flex:1;">
+              <span class="volume-val" id="sweepDurVal">5s</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Mode</label>
+            <div class="sweep-mode-btns">
+              <button class="sweep-mode-btn active" data-mode="oneshot">One-shot</button>
+              <button class="sweep-mode-btn" data-mode="loop">Loop</button>
+            </div>
+          </div>
+          <button class="sweep-play-btn" id="sweepPlayBtn">Start Sweep</button>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-envelope">
+        <canvas class="adsr-viz" id="adsrViz"></canvas>
+        <div class="adsr-sliders">
+          <div class="adsr-slider">
+            <label>Attack</label>
+            <input type="range" id="envAttack" min="0" max="2000" value="0" step="10">
+            <span class="adsr-val" id="envAttackVal">0 ms</span>
+          </div>
+          <div class="adsr-slider">
+            <label>Decay</label>
+            <input type="range" id="envDecay" min="0" max="2000" value="0" step="10">
+            <span class="adsr-val" id="envDecayVal">0 ms</span>
+          </div>
+          <div class="adsr-slider">
+            <label>Sustain</label>
+            <input type="range" id="envSustain" min="0" max="100" value="100">
+            <span class="adsr-val" id="envSustainVal">100%</span>
+          </div>
+          <div class="adsr-slider">
+            <label>Release</label>
+            <input type="range" id="envRelease" min="0" max="2000" value="0" step="10">
+            <span class="adsr-val" id="envReleaseVal">0 ms</span>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-keyboard">
+        <div class="keyboard-octave">Octave: <span id="kbOctave">C4 – C5</span></div>
+        <div class="piano" id="piano">
+          <div class="piano-white" data-note="0"><span class="note-label">C</span><span class="key-label">A</span></div>
+          <div class="piano-white" data-note="2"><span class="note-label">D</span><span class="key-label">S</span></div>
+          <div class="piano-white" data-note="4"><span class="note-label">E</span><span class="key-label">D</span></div>
+          <div class="piano-white" data-note="5"><span class="note-label">F</span><span class="key-label">F</span></div>
+          <div class="piano-white" data-note="7"><span class="note-label">G</span><span class="key-label">G</span></div>
+          <div class="piano-white" data-note="9"><span class="note-label">A</span><span class="key-label">H</span></div>
+          <div class="piano-white" data-note="11"><span class="note-label">B</span><span class="key-label">J</span></div>
+          <div class="piano-white" data-note="12"><span class="note-label">C</span><span class="key-label">K</span></div>
+          <div class="piano-black-container">
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black" data-note="1"><span class="key-label">W</span></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black" data-note="3"><span class="key-label">E</span></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black" data-note="6"><span class="key-label">T</span></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black" data-note="8"><span class="key-label">Y</span></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black" data-note="10"><span class="key-label">U</span></div>
+            <div class="piano-black-spacer"></div>
+            <div class="piano-black-spacer"></div>
+          </div>
+        </div>
+        <div class="keyboard-hint">Z/X to shift octave</div>
+      </div>
     </div>
   </div>
 

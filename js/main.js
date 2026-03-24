@@ -6,6 +6,9 @@ import { initTabs } from './tabs.js';
 import { initPresets } from './presets.js';
 import { initLayers } from './layers.js';
 import { initBinaural } from './binaural.js';
+import { initSweep, pauseSweep, resumeSweep, getIsSweeping } from './sweep.js';
+import { initEnvelope } from './envelope.js';
+import { initKeyboard, setKeyboardTabActive } from './keyboard.js';
 
 // DOM elements
 const freqSlider = document.getElementById('freqSlider');
@@ -158,11 +161,22 @@ noteName.textContent = freqToNote(audio.getCurrentFreq());
 
 // Initialize tabs
 initTabs((newTab, oldTab) => {
-  if (oldTab === 'keyboard') setKeyboardActive(false);
-  if (newTab === 'keyboard') setKeyboardActive(true);
+  if (oldTab === 'keyboard') {
+    setKeyboardActive(false);
+    setKeyboardTabActive(false);
+    if (getIsSweeping()) resumeSweep();
+  }
+  if (newTab === 'keyboard') {
+    setKeyboardActive(true);
+    setKeyboardTabActive(true);
+    if (getIsSweeping()) pauseSweep();
+  }
 });
 
 // Initialize tab modules
 initPresets();
 initLayers();
 initBinaural();
+initSweep();
+initEnvelope();
+initKeyboard();
