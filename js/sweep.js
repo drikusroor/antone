@@ -122,13 +122,13 @@ export function getSweepConfig() {
 }
 
 export function setSweepConfig(config) {
-  if (config.start) document.getElementById('sweepStart').value = config.start;
-  if (config.end) document.getElementById('sweepEnd').value = config.end;
-  if (config.duration) {
+  if (config.start !== undefined) document.getElementById('sweepStart').value = config.start;
+  if (config.end !== undefined) document.getElementById('sweepEnd').value = config.end;
+  if (config.duration !== undefined) {
     document.getElementById('sweepDuration').value = config.duration;
     document.getElementById('sweepDurVal').textContent = `${config.duration}s`;
   }
-  if (config.mode) {
+  if (config.mode !== undefined) {
     sweepMode = config.mode;
     document.querySelectorAll('.sweep-mode-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.mode === config.mode);

@@ -84,6 +84,7 @@ export function setKeyboardTabActive(active) {
   if (!active && activeKey !== null) {
     highlightKey(activeKey, false);
     activeKey = null;
+    audio.stopAudio();
   }
 }
 

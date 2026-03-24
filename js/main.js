@@ -26,7 +26,7 @@ const shareBtn = document.getElementById('shareBtn');
 let keyboardTabActive = false;
 let preKeyboardFreq = null;
 
-export function setKeyboardActive(active) {
+function setKeyboardActive(active) {
   if (active) {
     preKeyboardFreq = audio.getCurrentFreq();
     keyboardTabActive = true;
