@@ -4,6 +4,7 @@ import * as audio from './audio.js';
 import { initVisualizer, startDrawing } from './visualizer.js';
 import { initTabs } from './tabs.js';
 import { initPresets } from './presets.js';
+import { initLayers } from './layers.js';
 
 // DOM elements
 const freqSlider = document.getElementById('freqSlider');
@@ -162,3 +163,4 @@ initTabs((newTab, oldTab) => {
 
 // Initialize tab modules
 initPresets();
+initLayers();

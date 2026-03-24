@@ -460,6 +460,135 @@
     opacity: 0.6;
   }
 
+  /* Layers */
+  .layer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .layer-toggle {
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .layer-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .layer-toggle.on { background: var(--amber-dim); }
+  .layer-toggle.on::after { left: 18px; background: var(--amber); }
+
+  .layer-interval {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 6px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .layer-freq-input {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    width: 6ch;
+    padding: 4px 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--amber);
+    -moz-appearance: textfield;
+  }
+
+  .layer-freq-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .layer-wave-btns { display: flex; gap: 4px; }
+
+  .layer-wave-btn {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    padding: 4px 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .layer-wave-btn.active { border-color: var(--amber); color: var(--amber); }
+
+  .layer-vol { flex: 1; min-width: 60px; }
+
+  .layer-remove {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .layer-remove:hover { border-color: #ef4444; color: #ef4444; }
+
+  .add-layer-btn {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 10px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+  }
+
+  .add-layer-btn:hover { border-color: var(--amber-dim); color: var(--text); }
+
+  .layers-disabled-note {
+    font-size: 0.6rem;
+    color: var(--amber-dim);
+    text-align: center;
+    padding: 12px;
+  }
+
   /* Footer */
   footer {
     text-align: center;
@@ -568,7 +697,11 @@
           <button class="preset-btn" data-freq="15000">15 kHz<span class="preset-label">Hearing test</span></button>
         </div>
       </div>
-      <div class="tab-content" id="tab-layers"></div>
+      <div class="tab-content" id="tab-layers">
+        <div id="layersList"></div>
+        <button class="add-layer-btn" id="addLayerBtn">+ Add layer</button>
+        <div class="layers-disabled-note" id="layersDisabledNote" style="display:none;">Layers are disabled while binaural mode is active.</div>
+      </div>
       <div class="tab-content" id="tab-binaural"></div>
       <div class="tab-content" id="tab-sweep"></div>
       <div class="tab-content" id="tab-envelope"></div>
