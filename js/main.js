@@ -9,6 +9,7 @@ import { initBinaural } from './binaural.js';
 import { initSweep, pauseSweep, resumeSweep, getIsSweeping } from './sweep.js';
 import { initEnvelope } from './envelope.js';
 import { initKeyboard, setKeyboardTabActive } from './keyboard.js';
+import { serializeToURL, loadFromURL } from './params.js';
 
 // DOM elements
 const freqSlider = document.getElementById('freqSlider');
@@ -114,14 +115,9 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Share button (will be replaced by params.js in Task 12)
+// Share button
 shareBtn.addEventListener('click', () => {
-  const params = new URLSearchParams();
-  params.set('f', Math.round(audio.getCurrentFreq()));
-  const wave = audio.getCurrentWave();
-  if (wave !== 'sine') params.set('w', wave);
-  if (volumeSlider.value !== '50') params.set('v', volumeSlider.value);
-  const url = `${location.origin}${location.pathname}?${params}`;
+  const url = serializeToURL();
   navigator.clipboard.writeText(url).then(() => {
     shareBtn.classList.add('copied');
     setTimeout(() => shareBtn.classList.remove('copied'), 1500);
@@ -131,30 +127,8 @@ shareBtn.addEventListener('click', () => {
 // Initialize visualizer
 initVisualizer(canvas, () => audio.getAnalyser(), () => audio.getIsPlaying());
 
-// Load URL params (basic — will be replaced by params.js in Task 12)
-(function loadParams() {
-  const p = new URLSearchParams(location.search);
-  if (p.has('f')) {
-    const f = Math.max(MIN_FREQ, Math.min(MAX_FREQ, parseInt(p.get('f'), 10) || 440));
-    audio.setFrequency(f);
-    updateFreqUI(f);
-  }
-  if (p.has('w')) {
-    const w = p.get('w');
-    const btn = document.querySelector(`.wave-btn[data-wave="${w}"]`);
-    if (btn) {
-      waveBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      audio.setWaveform(w);
-    }
-  }
-  if (p.has('v')) {
-    const v = Math.max(0, Math.min(100, parseInt(p.get('v'), 10) || 50));
-    volumeSlider.value = v;
-    volVal.textContent = `${v}%`;
-    audio.setVolume(v / 100);
-  }
-})();
+// Load URL params
+loadFromURL();
 
 // Set initial note display
 noteName.textContent = freqToNote(audio.getCurrentFreq());
