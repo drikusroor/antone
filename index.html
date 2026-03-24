@@ -412,7 +412,7 @@
     <button class="play-btn" id="playBtn">Start</button>
   </div>
 
-  <footer>Web Audio API &middot; Client-side only</footer>
+  <footer>Made by <a href="https://studioroor.com" style="color:var(--amber-dim);text-decoration:none;border-bottom:1px solid var(--amber-dim);">Studio Roor</a> &middot; Web Audio API</footer>
 </div>
 
 <script>
@@ -606,7 +606,7 @@ function drawWave() {
 
 // Draw idle state
 drawWave();
-updateNote();
+noteName.textContent = freqToNote(parseFloat(freqNum.value));
 
 // Keyboard shortcut
 document.addEventListener('keydown', (e) => {
