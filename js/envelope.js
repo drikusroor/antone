@@ -2,11 +2,28 @@ import * as audio from './audio.js';
 
 let adsrCanvas, adsrCtx;
 
+// Log scale for A/D/R sliders: 0-1 normalized → 0-2000ms
+// Gives much more control over the 0-200ms range
+const MAX_MS = 2000;
+const LOG_MAX_MS = Math.log(MAX_MS + 1); // +1 to handle 0
+
+function sliderToMs(t) {
+  return Math.round(Math.exp(t * LOG_MAX_MS) - 1);
+}
+
+function msToSlider(ms) {
+  return Math.log(ms + 1) / LOG_MAX_MS;
+}
+
+function getMs(sliderId) {
+  return sliderToMs(parseFloat(document.getElementById(sliderId).value));
+}
+
 function drawADSR() {
-  const a = parseInt(document.getElementById('envAttack').value, 10);
-  const d = parseInt(document.getElementById('envDecay').value, 10);
+  const a = getMs('envAttack');
+  const d = getMs('envDecay');
   const s = parseInt(document.getElementById('envSustain').value, 10) / 100;
-  const r = parseInt(document.getElementById('envRelease').value, 10);
+  const r = getMs('envRelease');
 
   const rect = adsrCanvas.getBoundingClientRect();
   adsrCanvas.width = rect.width * devicePixelRatio;
@@ -82,15 +99,18 @@ export function initEnvelope() {
   };
 
   function update() {
-    vals.a.textContent = `${sliders.a.value} ms`;
-    vals.d.textContent = `${sliders.d.value} ms`;
+    const a = getMs('envAttack');
+    const d = getMs('envDecay');
+    const r = getMs('envRelease');
+    vals.a.textContent = `${a} ms`;
+    vals.d.textContent = `${d} ms`;
     vals.s.textContent = `${sliders.s.value}%`;
-    vals.r.textContent = `${sliders.r.value} ms`;
+    vals.r.textContent = `${r} ms`;
     audio.setEnvelope({
-      a: parseInt(sliders.a.value, 10),
-      d: parseInt(sliders.d.value, 10),
+      a,
+      d,
       s: parseInt(sliders.s.value, 10),
-      r: parseInt(sliders.r.value, 10),
+      r,
     });
     drawADSR();
   }
@@ -102,17 +122,17 @@ export function initEnvelope() {
 
 export function getEnvelopeConfig() {
   return {
-    a: parseInt(document.getElementById('envAttack').value, 10),
-    d: parseInt(document.getElementById('envDecay').value, 10),
+    a: getMs('envAttack'),
+    d: getMs('envDecay'),
     s: parseInt(document.getElementById('envSustain').value, 10),
-    r: parseInt(document.getElementById('envRelease').value, 10),
+    r: getMs('envRelease'),
   };
 }
 
 export function setEnvelopeConfig(config) {
-  if (config.a !== undefined) document.getElementById('envAttack').value = config.a;
-  if (config.d !== undefined) document.getElementById('envDecay').value = config.d;
+  if (config.a !== undefined) document.getElementById('envAttack').value = msToSlider(config.a);
+  if (config.d !== undefined) document.getElementById('envDecay').value = msToSlider(config.d);
   if (config.s !== undefined) document.getElementById('envSustain').value = config.s;
-  if (config.r !== undefined) document.getElementById('envRelease').value = config.r;
+  if (config.r !== undefined) document.getElementById('envRelease').value = msToSlider(config.r);
   document.getElementById('envAttack').dispatchEvent(new Event('input'));
 }
