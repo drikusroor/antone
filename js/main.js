@@ -2,6 +2,7 @@ import { freqToNote, sliderToFreq, freqToSlider, MIN_FREQ, MAX_FREQ } from './ut
 import { updateFreqUI } from './ui.js';
 import * as audio from './audio.js';
 import { initVisualizer, startDrawing } from './visualizer.js';
+import { initTabs } from './tabs.js';
 
 // DOM elements
 const freqSlider = document.getElementById('freqSlider');
@@ -151,3 +152,9 @@ initVisualizer(canvas, () => audio.getAnalyser(), () => audio.getIsPlaying());
 
 // Set initial note display
 noteName.textContent = freqToNote(audio.getCurrentFreq());
+
+// Initialize tabs
+initTabs((newTab, oldTab) => {
+  if (oldTab === 'keyboard') setKeyboardActive(false);
+  if (newTab === 'keyboard') setKeyboardActive(true);
+});

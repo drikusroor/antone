@@ -365,6 +365,101 @@
     background: var(--amber-glow);
   }
 
+  /* Tab bar */
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .tab-btn:hover {
+    border-color: var(--amber-dim);
+    color: var(--text);
+  }
+
+  .tab-btn.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .tab-content {
+    display: none;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .tab-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tab-info {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .tab-grid {
+    display: grid;
+    gap: 6px;
+  }
+
+  .preset-btn {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 10px 8px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--amber-dim);
+    color: var(--text);
+  }
+
+  .preset-btn:active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .preset-btn .preset-label {
+    display: block;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+    opacity: 0.6;
+  }
+
   /* Footer */
   footer {
     text-align: center;
@@ -449,6 +544,23 @@
       <button class="share-btn" id="shareBtn" title="Copy share link">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 7.5L15 6a2.83 2.83 0 00-4-4L9.5 3.5M6.5 12.5L5 14a2.83 2.83 0 004 4l1.5-1.5M7.5 12.5l5-5"/></svg>
       </button>
+    </div>
+
+    <div class="tab-section">
+      <div class="tab-bar">
+        <button class="tab-btn" data-tab="presets">Presets</button>
+        <button class="tab-btn" data-tab="layers">Layers</button>
+        <button class="tab-btn" data-tab="binaural">Binaural</button>
+        <button class="tab-btn" data-tab="sweep">Sweep</button>
+        <button class="tab-btn" data-tab="envelope">Envelope</button>
+        <button class="tab-btn" data-tab="keyboard">Keyboard</button>
+      </div>
+      <div class="tab-content" id="tab-presets"></div>
+      <div class="tab-content" id="tab-layers"></div>
+      <div class="tab-content" id="tab-binaural"></div>
+      <div class="tab-content" id="tab-sweep"></div>
+      <div class="tab-content" id="tab-envelope"></div>
+      <div class="tab-content" id="tab-keyboard"></div>
     </div>
   </div>
 
