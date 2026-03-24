@@ -702,7 +702,18 @@
         <button class="add-layer-btn" id="addLayerBtn">+ Add layer</button>
         <div class="layers-disabled-note" id="layersDisabledNote" style="display:none;">Layers are disabled while binaural mode is active.</div>
       </div>
-      <div class="tab-content" id="tab-binaural"></div>
+      <div class="tab-content" id="tab-binaural">
+        <p class="tab-info">Use headphones. The difference between L/R frequencies creates an audible beat.</p>
+        <div class="control-group">
+          <label>Offset</label>
+          <div class="volume-row">
+            <input type="range" id="binauralOffset" min="-30" max="30" value="0" step="0.5" style="flex:1;">
+            <span class="volume-val" id="binauralVal">0 Hz</span>
+          </div>
+          <div class="range-labels"><span>-30 Hz</span><span>+30 Hz</span></div>
+        </div>
+        <div id="binauralBeatLabel" class="tab-info" style="text-align:center; color:var(--amber-dim);"></div>
+      </div>
       <div class="tab-content" id="tab-sweep"></div>
       <div class="tab-content" id="tab-envelope"></div>
       <div class="tab-content" id="tab-keyboard"></div>
