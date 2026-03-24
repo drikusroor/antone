@@ -227,6 +227,10 @@ export function removeLayer(index) {
   layers.splice(index, 1);
 }
 
+export function clearLayers() {
+  while (layers.length > 0) removeLayer(layers.length - 1);
+}
+
 export function updateLayer(index, config) {
   const layer = layers[index];
   if (!layer) return;
