@@ -57,8 +57,8 @@ function onKeyDown(e) {
   if (!isActive) return;
   if (e.repeat) return;
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-  if (e.code === 'KeyZ') { e.preventDefault(); if (octave > 0) { octave--; updateOctaveDisplay(); } return; }
-  if (e.code === 'KeyX') { e.preventDefault(); if (octave < 8) { octave++; updateOctaveDisplay(); } return; }
+  if (e.code === 'KeyZ' || e.code === 'BracketLeft') { e.preventDefault(); if (octave > 0) { octave--; updateOctaveDisplay(); } return; }
+  if (e.code === 'KeyX' || e.code === 'BracketRight') { e.preventDefault(); if (octave < 8) { octave++; updateOctaveDisplay(); } return; }
   const noteOffset = KEY_MAP[e.code];
   if (noteOffset !== undefined) { e.preventDefault(); playNote(noteOffset); }
 }
